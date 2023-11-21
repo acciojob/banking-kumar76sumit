@@ -20,7 +20,7 @@ public class CurrentAccount extends BankAccount{
         else
             tradeLicenseId=res;
     }
-    static char getMaxCountChar(int[] count)
+    public char getMaxCountChar(int[] count)
     {
         int max = 0;
         char ch = 0;
@@ -32,7 +32,7 @@ public class CurrentAccount extends BankAccount{
         }
         return ch;
     }
-    static String rearrangeString(String S)
+    public String rearrangeString(String S)
     {
 
         int N = S.length();
