@@ -8,18 +8,17 @@ public class BankAccount {
     private double balance;
     private double minBalance;
 
+    public BankAccount(String name, double balance, double minBalance) {
+        this.name=name;
+        this.balance=balance;
+        this.minBalance=minBalance;
+    }
     public String getName() {
         return name;
     }
 
     public double getMinBalance() {
         return minBalance;
-    }
-
-    public BankAccount(String name, double balance, double minBalance) {
-        this.name=name;
-        this.balance=balance;
-        this.minBalance=minBalance;
     }
 
     public double getBalance() {
