@@ -36,7 +36,7 @@ public class BankAccount {
         {
             currSum+=9;
         }
-        if(currSum<sum)
+        if(sum<0 || currSum<sum)
         {
             throw new Exception("Account Number can not be generated");
         }
