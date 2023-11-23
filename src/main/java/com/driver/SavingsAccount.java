@@ -30,6 +30,8 @@ public class SavingsAccount extends BankAccount{
         {
             throw new Exception("Insufficient Balance");
         }
+        double bal=getBalance();
+        bal-=amount;
     }
 
     public double getSimpleInterest(int years){
