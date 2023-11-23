@@ -1,5 +1,17 @@
 package com.driver;
 
+import java.util.PriorityQueue;
+
+class Pair
+{
+    char ch;
+    int freq;
+    Pair(char ch,int freq)
+    {
+        this.ch=ch;
+        this.freq=freq;
+    }
+}
 public class CurrentAccount extends BankAccount{
     String tradeLicenseId; //consists of Uppercase English characters only
 
@@ -22,74 +34,71 @@ public class CurrentAccount extends BankAccount{
         // If the license Id is valid, do nothing
         // If the characters of the license Id can be rearranged to create any valid license Id
         // If it is not possible, throw "Valid License can not be generated" Exception
-        String res = rearrangeString(tradeLicenseId);
-        if (res == "")
-            throw new Exception("Valid License can not be generated");
-        else
-            tradeLicenseId=res;
-    }
-    public char getMaxCountChar(int[] count)
-    {
-        int max = 0;
-        char ch = 0;
-        for (int i = 0; i < 26; i++) {
-            if (count[i] > max) {
-                max = count[i];
-                ch = (char)((int)'a' + i);
+        boolean flag=true;
+        String s=tradeLicenseId;
+        for(int i=1;i<s.length();i++)
+        {
+            if(s.charAt(i)==s.charAt(i-1))
+            {
+                flag=false;
             }
         }
-        return ch;
-    }
-    public String rearrangeString(String S)
-    {
 
-        int N = S.length();
-        if (N == 0)
-            return "";
+        if(flag)
+        {
+            // create the freq array
+            int[] freqArray=new int[26];
+            for(int i=0;i<s.length();i++)
+            {
+                freqArray[s.charAt(i)-'a']++;
+            }
 
-        int[] count = new int[26];
-        for (int i = 0; i < 26; i++) {
-            count[i] = 0;
-        }
-        for (char ch : S.toCharArray()) {
-            count[(int)ch - (int)'a']++;
-        }
+            // retrieve on the basis of max freq because they can cause problem
+            PriorityQueue<Pair> pq=new PriorityQueue<>((a, b)->
+            {
+                return b.freq-a.freq;
+            });
+            for(int i=0;i<26;i++)
+            {
+                if(freqArray[i]>0)
+                {
+                    pq.add(new Pair((char)(i+'a'),freqArray[i]));
+                }
+            }
 
-        char ch_max = getMaxCountChar(count);
-        int maxCount = count[(int)ch_max - (int)'a'];
+            StringBuilder sb=new StringBuilder();
+            // append the first max char and reduce the freq
+            // because we will use the pair as block so that we can not use it in adjacent
+            Pair block=pq.remove();
+            sb.append(block.ch);
+            block.freq--;
 
-        // check if the result is possible or not
-        if (maxCount > (N + 1) / 2)
-            return "";
+            // perfrom this ops while pq have pairs
+            while(pq.size()!=0)
+            {
+                // append and update
+                Pair temp=pq.remove();
+                sb.append(temp.ch);
+                temp.freq--;
 
-        String res = "";
-        for (int i = 0; i < N; i++) {
-            res += ' ';
-        }
+                // only add in pq if the block ch is left
+                if(block.freq>0)
+                {
+                    pq.add(block);
+                }
+                // make the temp as block for next iteration
+                block=temp;
+            }
 
-        int ind = 0;
-        // filling the most frequently occurring char in the
-        // even indices
-        while (maxCount > 0) {
-            res = res.substring(0, ind) + ch_max
-                    + res.substring(ind + 1);
-            ind = ind + 2;
-            maxCount--;
-        }
-        count[(int)ch_max - (int)'a'] = 0;
-
-        // now filling the other Chars, first filling the
-        // even positions and then the odd positions
-        for (int i = 0; i < 26; i++) {
-            while (count[i] > 0) {
-                ind = (ind >= N) ? 1 : ind;
-                res = res.substring(0, ind)
-                        + (char)((int)'a' + i)
-                        + res.substring(ind + 1);
-                ind += 2;
-                count[i]--;
+            // after that if any ch are still left means we cannot reorganise them
+            if(block.freq>0)
+            {
+                throw new Exception("Valid License can not be generated");
+            }
+            else
+            {
+                tradeLicenseId=sb.toString();
             }
         }
-        return res;
     }
 }
