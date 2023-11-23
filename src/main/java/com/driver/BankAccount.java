@@ -41,16 +41,24 @@ public class BankAccount {
         }
         else {
             StringBuilder stringBuilder = new StringBuilder();
-            int currentSum = 0;
 
-            for (int i = 0; i < digits - 1; i++) {
-                int digit = random.nextInt(Math.min(sum - currentSum,10));
-                stringBuilder.append(digit);
-                currentSum += digit;
+            int num=9;
+            while(digits>0 && num>0)
+            {
+                int times=sum/num;
+                sum%=num;
+                for(int i=0;i<times;i++)
+                {
+                    stringBuilder.append(num);
+                    digits--;
+                }
+                num--;
             }
-
-            int lastDigit = sum - currentSum;
-            stringBuilder.append(lastDigit);
+            while(digits>0)
+            {
+                stringBuilder.append(0);
+                digits--;
+            }
 
             return stringBuilder.toString();
         }
