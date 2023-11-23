@@ -26,7 +26,13 @@ public class SavingsAccount extends BankAccount{
         {
             throw new Exception("Maximum Withdraw Limit Exceed");
         }
-        withdraw(amount);
+        if(amount>getBalance())
+        {
+            throw new Exception("Insufficient Balance");
+        }
+        else {
+            setBalance(getBalance()-amount);
+        }
     }
 
     public double getSimpleInterest(int years){
